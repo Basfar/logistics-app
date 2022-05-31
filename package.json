@@ -1,0 +1,47 @@
+{
+  "name": "logistics-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nero2005/logistics-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nero2005/logistics-app/issues"
+  },
+  "homepage": "https://github.com/Nero2005/logistics-app#readme",
+  "dependencies": {
+    "aws-sdk": "^2.1131.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "crypto-js": "^4.1.1",
+    "dotenv": "^16.0.0",
+    "express": "^4.18.1",
+    "got": "^12.0.4",
+    "helmet": "^5.0.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.3.2",
+    "morgan": "^1.10.0",
+    "nanoid": "^3.3.4",
+    "node-fetch": "^3.2.4",
+    "nodemailer": "^6.7.5",
+    "otp-generator": "^4.0.0",
+    "pg": "^8.7.3",
+    "sequelize": "^6.19.0",
+    "sequelize-cli": "^6.4.1",
+    "swagger-ui-express": "^4.4.0",
+    "twilio": "^3.77.0",
+    "uuid": "^8.3.2"
+  }
+}
