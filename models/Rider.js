@@ -22,6 +22,7 @@ const riderSchema = mongoose.Schema(
     },
     password: { type: String },
     otp_verified: { type: Boolean, default: false, allowNull: true },
+    email_verified: { type: Boolean, default: false, allowNull: true },
     vehicle_type: { type: String },
     plate_number: { type: String },
     current_location: { type: mongoose.Schema.Types.ObjectId, ref: "location" },

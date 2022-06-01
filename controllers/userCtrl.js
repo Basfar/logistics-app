@@ -6,6 +6,7 @@ import PhoneNumber from "../models/PhoneNumber.js";
 import LocationCol from "../models/Location.js";
 import CryptoJS from "crypto-js";
 import jwt from "jsonwebtoken";
+import fetch from "node-fetch";
 
 const userCtrl = {
   setPassword: async (req, res) => {
@@ -64,8 +65,19 @@ const userCtrl = {
 
       await foundUser.save();
 
+      const response = await fetch(
+        `${process.env.SERVER_HOST}/api/v1/users/otp/email`,
+        {
+          method: "POST",
+          body: JSON.stringify({ email }),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      const result = await response.json();
+
       res.status(200).json({
         message: "Personal Info added successfully",
+        ...result,
       });
     } catch (err) {
       console.log(err);

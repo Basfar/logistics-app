@@ -1,13 +1,17 @@
 import got from "got";
-import fetch from 'node-fetch';
+import fetch from "node-fetch";
+import sgMail from "@sendgrid/mail";
 import otpGenerator from "otp-generator";
 import User from "../models/User.js";
+import Rider from "../models/Rider.js";
 import Wallet from "../models/Wallet.js";
 import WalletTransaction from "../models/WalletTransaction.js";
 import Transaction from "../models/Transaction.js";
 import NotificationUser from "../models/NotificationUser.js";
 import NotificationRider from "../models/NotificationRider.js";
 import Order from "../models/Order.js";
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const genTxRef = () => {
   return (
@@ -114,7 +118,7 @@ const confirmPayment = async (transaction_id) => {
   const url = `https://api.flutterwave.com/v3/transactions/${transaction_id}/verify`;
 
   if (await transactionAlreadyExists(transaction_id)) {
-    return {status: 409, message: "Transaction already exists"}
+    return { status: 409, message: "Transaction already exists" };
   }
 
   const response = await got
@@ -133,7 +137,14 @@ const confirmPayment = async (transaction_id) => {
   return response.data;
 };
 
-const getPaymentLink = async (amount, currency, email, phone_number, name, redirect_url) => {
+const getPaymentLink = async (
+  amount,
+  currency,
+  email,
+  phone_number,
+  name,
+  redirect_url
+) => {
   try {
     const response = await got
       .post("https://api.flutterwave.com/v3/payments", {
@@ -192,6 +203,45 @@ const createNotification = async (
   });
 
   return [userNot, riderNot];
+};
+
+const sendRiderEmail = (email, subject, text) => {
+  const msgR = {
+    to: email,
+    from: "nologe37@gmail.com", // Use the email address or domain you verified above
+    subject: subject,
+    text: text,
+  };
+  sgMail.send(msgR).then(
+    () => {},
+    (error) => {
+      console.error(error);
+
+      if (error.response) {
+        console.error(error.response.body);
+      }
+    }
+  );
+};
+
+const sendUserEmail = (email, subject, text) => {
+  const msgU = {
+    to: email,
+    from: "nologe37@gmail.com", // Use the email address or domain you verified above
+    subject: subject,
+    text: text,
+  };
+  //ES6
+  sgMail.send(msgU).then(
+    () => {},
+    (error) => {
+      console.error(error);
+
+      if (error.response) {
+        console.error(error.response.body);
+      }
+    }
+  );
 };
 
 const paymentCtrl = {
@@ -262,13 +312,13 @@ const paymentCtrl = {
       };
       const url = `${process.env.SERVER_HOST}/api/v1/payments/with_wallet/confirm`;
       const response = await fetch(url, {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify({ transaction_details }),
-        headers: { 'Content-Type': 'application/json' }
-      })
+        headers: { "Content-Type": "application/json" },
+      });
       const result = await response.json();
-      console.log(result)
-      console.log(response.status)
+      console.log(result);
+      console.log(response.status);
       return res.status(response.status).json(result);
     } catch (err) {
       console.log(err);
@@ -278,7 +328,7 @@ const paymentCtrl = {
   confirmPaymentWithWallet: async (req, res) => {
     try {
       const { transaction_details } = req.body;
-      console.log(transaction_details)
+      console.log(transaction_details);
       const { customer, order_id, currency, transaction_id } =
         transaction_details;
       console.log(order_id);
@@ -303,7 +353,10 @@ const paymentCtrl = {
       const wallet = await Wallet.findOne({ userId });
       wallet.balance = wallet.balance - amount;
       if (!order.paid) order.paid = true;
-      else res.status(200).json({ method: "wallet", message: "Already paid for this order" });
+      else
+        res
+          .status(200)
+          .json({ method: "wallet", message: "Already paid for this order" });
       await order.save();
       await wallet.save();
       await createNotification(
@@ -315,8 +368,22 @@ const paymentCtrl = {
         "order payment",
         order.rider_id
       );
+      const user = await User.findById(userId);
+      const rider = await Rider.findById(order.rider_id);
+      sendUserEmail(
+        user.email,
+        `Payment Complete`,
+        `You have paid for order ${order_id} with wallet`
+      );
+      sendRiderEmail(
+        rider.email,
+        "Order Delivered",
+        `The user has paid for order ${order_id}`
+      );
       // return res.redirect(`${process.env.HOME_PAGE}`);
-      return res.status(200).json({ method: "wallet", message: "Payment successful" });
+      return res
+        .status(200)
+        .json({ method: "wallet", message: "Payment successful" });
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);
@@ -337,29 +404,46 @@ const paymentCtrl = {
     try {
       const { transaction_id } = req.query;
       const response = await confirmPayment(transaction_id);
-      if (response.message) return res.status(response.status).json(response.message);
+      if (response.message)
+        return res.status(response.status).json(response.message);
       const { status, currency, id, amount, customer } = response;
       const user = await User.findOne({ email: customer.email });
       await createTransaction(user._id, id, status, currency, amount, customer);
       const transaction = await Transaction.findOne({
         transactionId: id,
-      })
-      const order = await Order.findOne({order_id: transaction.orderId})
+      });
+      const order_id = transaction.orderId;
+      const order = await Order.findOne({ order_id: order_id });
       await createNotification(
         user._id,
-        transaction.orderId,
+        order_id,
         `Payment Complete`,
-        `You have paid for order ${transaction.orderId} with card`,
-        `The user has paid for order ${transaction.orderId}`,
+        `You have paid for order ${order_id} with card`,
+        `The user has paid for order ${order_id}`,
         "order payment",
         order.rider_id
       );
       if (!order.paid) order.paid = true;
-      else res.status(200).json({ method: "card", message: "Already paid for this order" });
+      else
+        res
+          .status(200)
+          .json({ method: "card", message: "Already paid for this order" });
       await order.save();
+      const rider = await Rider.findById(order.rider_id);
+      sendUserEmail(
+        user.email,
+        `Payment Complete`,
+        `You have paid for order ${order_id} with card`
+      );
+      sendRiderEmail(
+        rider.email,
+        `Payment Complete`,
+        `The user has paid for order ${order_id}`
+      );
       // return res.redirect(`${process.env.HOME_PAGE}`);
       return res.status(200).json({
-        method: "card", message: "Payment successful",
+        method: "card",
+        message: "Payment successful",
       });
     } catch (err) {
       console.log(err);
@@ -370,7 +454,9 @@ const paymentCtrl = {
     try {
       const { transaction_id } = req.query;
 
-      const { status, currency, id, amount, customer } = await confirmPayment(transaction_id);
+      const { status, currency, id, amount, customer } = await confirmPayment(
+        transaction_id
+      );
       const user = await User.findOne({ email: customer.email });
       // user, id, status, currency, amount, customer
       const wallet = await fundWallet(
@@ -388,9 +474,15 @@ const paymentCtrl = {
 
       const userNot = await NotificationUser.create({
         user_id: user._id,
-        title: `Payment Complete`,
+        title: `Wallet Funded`,
         content: `You have funded your wallet with ${amount}`,
       });
+
+      sendUserEmail(
+        user.email,
+        `Wallet Funded`,
+        `You have funded your wallet with ${amount}`
+      );
 
       // return res.redirect(`${process.env.HOME_PAGE}`);
 

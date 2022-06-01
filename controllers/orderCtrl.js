@@ -1,5 +1,6 @@
 import Order from "../models/Order.js";
 import got from "got";
+import sgMail from "@sendgrid/mail";
 import otpGenerator from "otp-generator";
 import Package from "../models/Package.js";
 import NotificationUser from "../models/NotificationUser.js";
@@ -8,6 +9,8 @@ import User from "../models/User.js";
 import LocationCol from "../models/Location.js";
 import Rider from "../models/Rider.js";
 import Company from "../models/Company.js";
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const genOrderId = () => {
   return (
@@ -53,6 +56,45 @@ const createNotification = async (
   });
 
   return [userNot, riderNot];
+};
+
+const sendRiderEmail = (email, subject, text) => {
+  const msgR = {
+    to: email,
+    from: "nologe37@gmail.com", // Use the email address or domain you verified above
+    subject: subject,
+    text: text,
+  };
+  sgMail.send(msgR).then(
+    () => {},
+    (error) => {
+      console.error(error);
+
+      if (error.response) {
+        console.error(error.response.body);
+      }
+    }
+  );
+};
+
+const sendUserEmail = (email, subject, text) => {
+  const msgU = {
+    to: email,
+    from: "nologe37@gmail.com", // Use the email address or domain you verified above
+    subject: subject,
+    text: text,
+  };
+  //ES6
+  sgMail.send(msgU).then(
+    () => {},
+    (error) => {
+      console.error(error);
+
+      if (error.response) {
+        console.error(error.response.body);
+      }
+    }
+  );
 };
 
 const orderCtrl = {
@@ -126,6 +168,16 @@ const orderCtrl = {
         "order",
         rider_id
       );
+      sendUserEmail(
+        user.email,
+        "Order Creation",
+        `You have created a new order with order id ${order_id}`
+      );
+      sendRiderEmail(
+        rider.email,
+        "Order Creation",
+        `You have received a new order with order id ${order_id}`
+      );
       return res.status(201).json({ ...newOrder._doc, status: "successful" });
     } catch (err) {
       console.log(err);
@@ -179,6 +231,8 @@ const orderCtrl = {
       foundOrder.order_status = "pending";
       const rider_id = foundOrder.rider_id;
       const user_id = foundOrder.user_id;
+      const user = await User.findById(user_id);
+      const rider = await Rider.findById(rider_id);
       await foundOrder.save();
 
       await createNotification(
@@ -189,6 +243,16 @@ const orderCtrl = {
         `You have accepted a new order with order id ${order_id}`,
         "order",
         rider_id
+      );
+      sendUserEmail(
+        user.email,
+        "Order Accepted",
+        `Your order ${order_id} has been accepted`
+      );
+      sendRiderEmail(
+        rider.email,
+        "Order Accepted",
+        `You have accepted a new order with order id ${order_id}`
       );
       return res.status(200).json({ message: "order accepted" });
     } catch (err) {
@@ -204,6 +268,8 @@ const orderCtrl = {
       const rider_id = foundOrder.rider_id;
       foundOrder.rider_id = null;
       const user_id = foundOrder.user_id;
+      const user = await User.findById(user_id);
+      const rider = await Rider.findById(rider_id);
       await foundOrder.save();
 
       await createNotification(
@@ -215,6 +281,17 @@ const orderCtrl = {
         "order",
         rider_id
       );
+
+      sendUserEmail(
+        user.email,
+        "Order Declined",
+        `Your order ${order_id} has been declined. Please choose another rider`
+      );
+      sendRiderEmail(
+        rider.email,
+        "Order Declined",
+        `You have declined order with order id ${order_id}`
+      );
       return res.status(200).json({ message: "order declined" });
     } catch (err) {
       console.log(err);
@@ -225,16 +302,29 @@ const orderCtrl = {
     try {
       const { order_id, rider_id } = req.body;
       const foundOrder = await Order.findOne({ order_id });
+      const user_id = foundOrder.user_id;
       foundOrder.rider_id = rider_id;
       await foundOrder.save();
       await createNotification(
-        req.user.id,
+        user_id,
         order_id,
         "Rider Changed",
         `Your rider for order ${order_id} has been changed.`,
         `You have received a new order with order id ${order_id}`,
         "order",
         rider_id
+      );
+      const user = await User.findById(user_id);
+      const rider = await Rider.findById(rider_id);
+      sendUserEmail(
+        user.email,
+        "Rider Changed",
+        `Your rider for order ${order_id} has been changed.`
+      );
+      sendRiderEmail(
+        rider.email,
+        "Rider Changed",
+        `You have received a new order with order id ${order_id}`
       );
       res.status(200).json({ message: "rider changed successfully" });
     } catch (err) {
@@ -246,8 +336,31 @@ const orderCtrl = {
     try {
       const { order_id } = req.body;
       const foundOrder = await Order.findOne({ order_id });
+      const rider_id = foundOrder.rider_id;
+      const user_id = foundOrder.user_id;
       foundOrder.picked_up = true;
       await foundOrder.save();
+      await createNotification(
+        user_id,
+        order_id,
+        "Order Picked Up",
+        `Your order ${order_id} has been picked up.`,
+        `You have picked up order with order id ${order_id}`,
+        "order",
+        rider_id
+      );
+      const user = await User.findById(user_id);
+      const rider = await Rider.findById(rider_id);
+      sendUserEmail(
+        user.email,
+        "Order Picked Up",
+        `Your order ${order_id} has been picked up.`
+      );
+      sendRiderEmail(
+        rider.email,
+        "Order Picked Up",
+        `You have picked up order with order id ${order_id}`
+      );
       return res.status(200).json({ message: "order picked up" });
     } catch (err) {
       console.log(err);
@@ -259,7 +372,30 @@ const orderCtrl = {
       const { order_id } = req.body;
       const foundOrder = await Order.findOne({ order_id });
       foundOrder.delivered = true;
+      const rider_id = foundOrder.rider_id;
+      const user_id = foundOrder.user_id;
       await foundOrder.save();
+      await createNotification(
+        user_id,
+        order_id,
+        "Order Delivered",
+        `Your order ${order_id} has been delivered.`,
+        `You have delivered order with order id ${order_id}`,
+        "order",
+        rider_id
+      );
+      const user = await User.findById(user_id);
+      const rider = await Rider.findById(rider_id);
+      sendUserEmail(
+        user.email,
+        "Order Delivered",
+        `Your order ${order_id} has been delivered.`
+      );
+      sendRiderEmail(
+        rider.email,
+        "Order Delivered",
+        `You have delivered order with order id ${order_id}`
+      );
       return res.status(200).json({ message: "order delivered" });
     } catch (err) {
       console.log(err);

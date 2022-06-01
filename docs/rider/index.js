@@ -2,6 +2,7 @@ import sendOtp from "./send-otp.js";
 import verifyOtp from "./verify-otp.js";
 import setPassword from "./set-password.js";
 import addPersonalInfo from "./add-personal-info.js";
+import verifyEmail from "./verify-email.js";
 import addBikeDetails from "./add-bike-details.js";
 import addDeliveryLocation from "./add-delivery-location.js";
 import login from "./login.js";
@@ -15,8 +16,11 @@ export const riderPaths = {
   "/api/v1/riders/otp/phone": {
     ...sendOtp,
   },
-  "/api/v1/riders/otp/verify": {
+  "/api/v1/riders/otp/verify/phone": {
     ...verifyOtp,
+  },
+  "/api/v1/riders/otp/verify/email": {
+    ...verifyEmail,
   },
   "/api/v1/riders/set_password": {
     ...setPassword,

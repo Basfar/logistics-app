@@ -51,8 +51,19 @@ const riderCtrl = {
 
       await foundRider.save();
 
+      const response = await fetch(
+        `${process.env.SERVER_HOST}/api/v1/riders/otp/email`,
+        {
+          method: "POST",
+          body: JSON.stringify({ email }),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      const result = await response.json();
+
       res.status(200).json({
         message: "Personal Info added successfully",
+        ...result,
       });
     } catch (err) {
       console.log(err);

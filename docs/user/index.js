@@ -2,6 +2,7 @@ import sendOtpUser from "./send-otp.js";
 import verifyOtpUser from "./verify-otp.js";
 import setPasswordUser from "./set-password.js";
 import addPersonalInfoUser from "./add-personal-info.js";
+import verifyEmailUser from "./verify-email.js";
 import addDeliveryLocationUser from "./add-delivery-location.js";
 import loginUser from "./login.js";
 import logoutUser from "./logout.js";
@@ -15,8 +16,11 @@ export const userPaths = {
   "/api/v1/users/otp/phone": {
     ...sendOtpUser,
   },
-  "/api/v1/users/otp/verify": {
+  "/api/v1/users/otp/verify/phone": {
     ...verifyOtpUser,
+  },
+  "/api/v1/users/otp/verify/email": {
+    ...verifyEmailUser,
   },
   "/api/v1/users/set_password": {
     ...setPasswordUser,

@@ -49,6 +49,16 @@ export default {
                 type: "String",
                 example: "Personal info added successfully",
               },
+              Status: {
+                type: "String",
+                example: "success",
+              },
+              Details: {
+                type: "String",
+                description:
+                  "An encoded JSON String containing the timestamp, phone number and otp id. " +
+                  "To be passed as a body parameter when verifying OTP",
+              },
             },
           },
         },

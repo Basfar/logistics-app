@@ -21,6 +21,7 @@ const userSchema = mongoose.Schema(
     },
     password: { type: String },
     otp_verified: { type: Boolean, default: false, allowNull: true },
+    email_verified: { type: Boolean, default: false, allowNull: true },
     current_location: { type: mongoose.Schema.Types.ObjectId, ref: "location" },
   },
   { timestamps: true }
