@@ -8,19 +8,23 @@ export default {
       {
         name: "location_id", // name of the param
         in: "body", // location of the param
-        schema: {
-          type: "String",
-          example: "home",
+        "application/json": {
+          schema: {
+            type: "String",
+            example: "home",
+          },
         },
         required: true, // Mandatory param
-        description: "Location id created by user", // param desc.
+        description: "Location id created by user Type String Example: home", // param desc.
       },
       {
         name: "location_name", // name of the param
         in: "body", // location of the param
-        schema: {
-          type: "String",
-          example: "Home",
+        "application/json": {
+          schema: {
+            type: "String",
+            example: "Home",
+          },
         },
         required: true, // Mandatory param
         description: "Location name created by user", // param desc.
@@ -28,9 +32,11 @@ export default {
       {
         name: "longitude", // name of the param
         in: "body", // location of the param
-        schema: {
-          type: "Double",
-          example: "3.209383",
+        "application/json": {
+          schema: {
+            type: "Double",
+            example: "3.209383",
+          },
         },
         required: true, // Mandatory param
         description: "Location longitude", // param desc.
@@ -38,9 +44,11 @@ export default {
       {
         name: "latitude", // name of the param
         in: "body", // location of the param
-        schema: {
-          type: "Double",
-          example: "6.104283",
+        "application/json": {
+          schema: {
+            type: "Double",
+            example: "6.104283",
+          },
         },
         required: true, // Mandatory param
         description: "Location latitude", // param desc.

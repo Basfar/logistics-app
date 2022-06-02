@@ -1,6 +1,7 @@
 import got from "got";
 import fetch from "node-fetch";
 import sgMail from "@sendgrid/mail";
+import nodemailer from "nodemailer";
 import otpGenerator from "otp-generator";
 import User from "../models/User.js";
 import Rider from "../models/Rider.js";
@@ -11,7 +12,7 @@ import NotificationUser from "../models/NotificationUser.js";
 import NotificationRider from "../models/NotificationRider.js";
 import Order from "../models/Order.js";
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+// sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const genTxRef = () => {
   return (
@@ -205,43 +206,106 @@ const createNotification = async (
   return [userNot, riderNot];
 };
 
-const sendRiderEmail = (email, subject, text) => {
-  const msgR = {
-    to: email,
-    from: "nologe37@gmail.com", // Use the email address or domain you verified above
-    subject: subject,
-    text: text,
-  };
-  sgMail.send(msgR).then(
-    () => {},
-    (error) => {
-      console.error(error);
+// const transporter = nodemailer.createTransport({
+//   host: "smtp.gmail.com",
+//   port: 465,
+//   secure: true,
+//   auth: {
+//     user: `${process.env.EMAIL_ADDRESS}`,
+//     pass: `${process.env.EMAIL_PASSWORD}`,
+//   },
+// });
 
-      if (error.response) {
-        console.error(error.response.body);
-      }
-    }
-  );
+// await transporter.verify();
+
+const sendRiderEmail = (email, subject, text) => {
+  // const msgR = {
+  //   to: email,
+  //   from: "nologe37@gmail.com", // Use the email address or domain you verified above
+  //   subject: subject,
+  //   text: text,
+  // };
+  // sgMail.send(msgR).then(
+  //   () => {},
+  //   (error) => {
+  //     console.error(error);
+
+  //     if (error.response) {
+  //       console.error(error.response.body);
+  //     }
+  //   }
+  // );
+  
+  // console.log("After transporter creation");
+  // console.log("After transporter verification");
+
+  // const mailOptions = {
+  //   from: `"Percy Jackson"<${process.env.EMAIL_ADDRESS}>`,
+  //   to: `${email}`,
+  //   subject: subject,
+  //   text: text,
+  // };
+
+  // console.log("After mail options");
+
+  // transporter.sendMail(mailOptions, (err, response) => {
+  //   if (err) {
+  //     console.log("Here in transporter");
+  //     console.log(err);
+  //     // statusCode = 400;
+  //     // resp = { Status: "Failure", Details: err };
+  //   } else {
+  //     console.log("Success");
+  //     // statusCode = 200;
+  //     // resp = { Status: "Success", Details: encoded };
+  //   }
+  // });
 };
 
 const sendUserEmail = (email, subject, text) => {
-  const msgU = {
-    to: email,
-    from: "nologe37@gmail.com", // Use the email address or domain you verified above
-    subject: subject,
-    text: text,
-  };
-  //ES6
-  sgMail.send(msgU).then(
-    () => {},
-    (error) => {
-      console.error(error);
+  // const msgU = {
+  //   to: email,
+  //   from: "nologe37@gmail.com", // Use the email address or domain you verified above
+  //   subject: subject,
+  //   text: text,
+  // };
+  // //ES6
+  // sgMail.send(msgU).then(
+  //   () => {},
+  //   (error) => {
+  //     console.error(error);
 
-      if (error.response) {
-        console.error(error.response.body);
-      }
-    }
-  );
+  //     if (error.response) {
+  //       console.error(error.response.body);
+  //     }
+  //   }
+  // );
+  
+  // console.log("After transporter creation");
+  // console.log("After transporter verification");
+
+  // const mailOptions = {
+  //   from: `"Percy Jackson"<${process.env.EMAIL_ADDRESS}>`,
+  //   to: `${email}`,
+  //   subject: subject,
+  //   text: text,
+  // };
+
+  // console.log("After mail options");
+
+  // transporter.sendMail(mailOptions, (err, response) => {
+  //   if (err) {
+  //     console.log("Here in transporter");
+  //     console.log(err);
+  //     // statusCode = 400;
+  //     // resp = { Status: "Failure", Details: err };
+  //   } else {
+  //     console.log("Success");
+  //     // statusCode = 200;
+  //     // resp = { Status: "Success", Details: encoded };
+  //   }
+  //   res.status(statusCode).json(resp);
+  // });
 };
 
 const paymentCtrl = {
@@ -370,16 +434,16 @@ const paymentCtrl = {
       );
       const user = await User.findById(userId);
       const rider = await Rider.findById(order.rider_id);
-      sendUserEmail(
-        user.email,
-        `Payment Complete`,
-        `You have paid for order ${order_id} with wallet`
-      );
-      sendRiderEmail(
-        rider.email,
-        "Order Delivered",
-        `The user has paid for order ${order_id}`
-      );
+      // sendUserEmail(
+      //   user.email,
+      //   `Payment Complete`,
+      //   `You have paid for order ${order_id} with wallet`
+      // );
+      // sendRiderEmail(
+      //   rider.email,
+      //   "Order Delivered",
+      //   `The user has paid for order ${order_id}`
+      // );
       // return res.redirect(`${process.env.HOME_PAGE}`);
       return res
         .status(200)
@@ -430,16 +494,16 @@ const paymentCtrl = {
           .json({ method: "card", message: "Already paid for this order" });
       await order.save();
       const rider = await Rider.findById(order.rider_id);
-      sendUserEmail(
-        user.email,
-        `Payment Complete`,
-        `You have paid for order ${order_id} with card`
-      );
-      sendRiderEmail(
-        rider.email,
-        `Payment Complete`,
-        `The user has paid for order ${order_id}`
-      );
+      // sendUserEmail(
+      //   user.email,
+      //   `Payment Complete`,
+      //   `You have paid for order ${order_id} with card`
+      // );
+      // sendRiderEmail(
+      //   rider.email,
+      //   `Payment Complete`,
+      //   `The user has paid for order ${order_id}`
+      // );
       // return res.redirect(`${process.env.HOME_PAGE}`);
       return res.status(200).json({
         method: "card",
@@ -478,11 +542,11 @@ const paymentCtrl = {
         content: `You have funded your wallet with ${amount}`,
       });
 
-      sendUserEmail(
-        user.email,
-        `Wallet Funded`,
-        `You have funded your wallet with ${amount}`
-      );
+      // sendUserEmail(
+      //   user.email,
+      //   `Wallet Funded`,
+      //   `You have funded your wallet with ${amount}`
+      // );
 
       // return res.redirect(`${process.env.HOME_PAGE}`);
 

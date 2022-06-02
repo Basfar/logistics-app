@@ -8,18 +8,23 @@ export default {
       {
         name: "check", // name of the param
         in: "body", // location of the param
-        schema: {
-          type: "Number",
-          example: "2348139306230",
+        "application/json": {
+          schema: {
+            type: "number",
+            example: 2348139306230,
+          },
         },
         required: true, // Mandatory param
-        description: "Phone number OTP was sent to", // param desc.
+        description:
+          "Phone number OTP was sent to. Type Number. Example 2348139306230", // param desc.
       },
       {
         name: "verification_key", // name of the param
         in: "body", // location of the param
-        schema: {
-          type: "String",
+        "application/json": {
+          schema: {
+            type: "string",
+          },
         },
         required: true, // Mandatory param
         description: "The encoded String returned from send otp route", // param desc.
@@ -27,8 +32,10 @@ export default {
       {
         name: "otp", // name of the param
         in: "body", // location of the param
-        schema: {
-          type: "String",
+        "application/json": {
+          schema: {
+            type: "string",
+          },
         },
         required: true, // Mandatory param
         description: "The otp provided by the user", // param desc.
@@ -44,7 +51,7 @@ export default {
           "application/json": {
             schema: {
               Status: {
-                type: "String",
+                type: "string",
                 example: "success",
               },
               Details: {

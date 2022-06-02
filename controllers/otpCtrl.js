@@ -97,7 +97,7 @@ const otpCtrl = {
         specialChars: false,
       });
       const now = new Date();
-      const expiration_time = AddMinutesToDate(now, 5);
+      const expiration_time = AddMinutesToDate(now, 10);
 
       const newOTP = new OTP({
         otp: otp,
@@ -121,36 +121,72 @@ const otpCtrl = {
       let statusCode;
       let resp;
 
-      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-      const msg = {
-        to: email,
-        from: "nologe37@gmail.com", // Use the email address or domain you verified above
-        subject: email_subject,
-        text: email_message,
-      };
+      // sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+      // const msg = {
+      //   to: email,
+      //   from: "nologe37@gmail.com", // Use the email address or domain you verified above
+      //   subject: email_subject,
+      //   text: email_message,
+      // };
       //ES6
-      sgMail.send(msg).then(
-        () => {
-          statusCode = 200;
-          resp = {
-            Status: "Success",
-            Details: encoded,
-          };
-        },
-        (error) => {
-          console.error(error);
+      // sgMail.send(msg).then(
+      //   () => {
+      //     statusCode = 200;
+      //     resp = {
+      //       Status: "Success",
+      //       Details: encoded,
+      //     };
+      //   },
+      //   (error) => {
+      //     console.error(error);
 
-          if (error.response) {
-            console.error(error.response.body);
-          }
-          statusCode = 400;
-          resp = {
-            Status: "Failure",
-            Details: error,
-          };
-        }
-      );
-      res.status(statusCode).json(resp);
+      //     if (error.response) {
+      //       console.error(error.response.body);
+      //     }
+      //     statusCode = 400;
+      //     resp = {
+      //       Status: "Failure",
+      //       Details: error,
+      //     };
+      //   }
+      // );
+      // const transporter = nodemailer.createTransport({
+      //   host: "smtp.gmail.com",
+      //   port: 465,
+      //   secure: true,
+      //   auth: {
+      //     user: `${process.env.EMAIL_ADDRESS}`,
+      //     pass: `${process.env.EMAIL_PASSWORD}`,
+      //   },
+      // });
+
+      // console.log("After transporter creation");
+
+      // const mailOptions = {
+      //   from: `"Percy Jackson"<${process.env.EMAIL_ADDRESS}>`,
+      //   to: `${email}`,
+      //   subject: email_subject,
+      //   text: email_message,
+      // };
+
+      // console.log("After mail options");
+
+      // await transporter.verify();
+
+      // console.log("After transporter verification");
+
+      // transporter.sendMail(mailOptions, (err, response) => {
+      //   if (err) {
+      //     console.log("Here in transporter");
+      //     statusCode = 400;
+      //     resp = { Status: "Failure", Details: err };
+      //   } else {
+      //     console.log("Success");
+      //     statusCode = 200;
+      //     resp = { Status: "Success", Details: encoded };
+      //   }
+      // });
+        // res.status(statusCode).json(resp);
     } catch (err) {
       const response = { Status: "Failure", Details: err.message };
       console.log("Here in catch");

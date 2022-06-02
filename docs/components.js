@@ -2,46 +2,46 @@ export default {
   components: {
     schemas: {
       _id: {
-        type: "String", // data-type
+        type: "string", // data-type
         description: "Database auto generated id", // desc
         example: "6290b8a117bbcaf8b4df5788", // example
       },
       // user model
       User: {
-        type: "Object", // data type
+        type: "object", // data type
         properties: {
           _id: {
-            type: "String", // data-type
+            type: "string", // data-type
             description: "Database auto generated user id", // desc
             example: "6290b8a117bbcaf8b4df5788", // example
           },
           first_name: {
-            type: "String", // data-type
+            type: "string", // data-type
             description: "User first name", // desc
             example: "Oghenero", // example
           },
           last_name: {
-            type: "String", // data-type
+            type: "string", // data-type
             description: "User last name", // desc
             example: "Ologe", // example
           },
           email: {
-            type: "String", // data-type
+            type: "string", // data-type
             description: "User email", // desc
             example: "example@gmail.com", // example
           },
           phone_number: {
-            type: "Number", // data-type
-            description: "User phone number", // desc
-            example: "2348139306230", // example
+            type: "string", // data-type
+            description: "User phone number _id", // desc
+            example: "string", // example
           },
           otp_verified: {
-            type: "Boolean", // data-type
+            type: "boolean", // data-type
             description: "The status of user phone number", // desc
-            example: "true", // example
+            example: true, // example
           },
           current_location: {
-            type: "String", // data-type
+            type: "string", // data-type
             description: "The _id of user location, ref: Location", // desc
             example: "6290b8a117bbcaf8b4df5788", // example
           },
@@ -49,244 +49,244 @@ export default {
       },
       // rider model
       Rider: {
-        type: "Object", // data type
+        type: "object", // data type
         properties: {
           _id: {
-            type: "String", // data-type
+            type: "string", // data-type
             description: "Database auto generated rider id", // desc
             example: "6290b8a117bbcaf8b4df5788", // example
           },
           first_name: {
-            type: "String", // data-type
+            type: "string", // data-type
             description: "Rider first name", // desc
             example: "Oghenero", // example
           },
           last_name: {
-            type: "String", // data-type
+            type: "string", // data-type
             description: "Rider last name", // desc
             example: "Ologe", // example
           },
           email: {
-            type: "String", // data-type
+            type: "string", // data-type
             description: "Rider email", // desc
             example: "example@gmail.com", // example
           },
           phone_number: {
-            type: "Number", // data-type
-            description: "Rider phone number", // desc
-            example: "2348139306230", // example
+            type: "string", // data-type
+            description: "Rider phone number _id", // desc
+            example: "6290b8a117bbcaf8b4df5788", // example
           },
           otp_verified: {
-            type: "Boolean", // data-type
+            type: "boolean", // data-type
             description: "The status of rider phone number", // desc
-            example: "true", // example
+            example: true, // example
           },
           vehicle_type: {
-            type: "String", // data-type
+            type: "string", // data-type
             description: "The vehicle type of rider", // desc
             example: "bike", // example
           },
           plate_number: {
-            type: "String", // data-type
+            type: "string", // data-type
             description: "The plate number of rider", // desc
             example: "aaa-jkw392", // example
           },
           current_location: {
-            type: "String", // data-type
+            type: "string", // data-type
             description: "The id of rider location, ref: Location", // desc
             example: "6290b8a117bbcaf8b4df5788", // example
           },
         },
       },
       Location: {
-        type: "Object", // data type
+        type: "object", // data type
         properties: {
           _id: {
-            type: "String", // data-type
+            type: "string", // data-type
             description: "Database auto generated location id", // desc
             example: "6290b8a117bbcaf8b4df5788", // example
           },
           location_id: {
-            type: "String", // data-type
+            type: "string", // data-type
             description: "Location id created by user", // desc
             example: "home", // example
           },
           name: {
-            type: "String", // data-type
+            type: "string", // data-type
             description: "Location name created by user", // desc
             example: "Home", // example
           },
           type: {
-            type: "String",
+            type: "string",
             description: "Type of location object: delivery or pickup",
             example: "delivery, pickup",
           },
           longitude: {
-            type: "Double", // data-type
+            type: "double", // data-type
             description: "Location longitude", // desc
-            example: "3.439202", // example
+            example: 3.439202, // example
           },
           latitude: {
-            type: "Double", // data-type
+            type: "double", // data-type
             description: "Location latitude", // desc
-            example: "6.103408", // example
+            example: 6.103408, // example
           },
         },
       },
       // order model
       Package: {
-        type: "Object", // data type
+        type: "object", // data type
         properties: {
           _id: {
-            type: "String", // data-type
+            type: "string", // data-type
             description: "Database auto generated package id", // desc
             example: "6290b8a117bbcaf8b4df5788", // example
           },
           package_id: {
-            type: "String", // data-type
+            type: "string", // data-type
             description: "Random unique package id", // desc
             example: "OO-27253", // example
           },
           package_name: {
-            type: "String", // data-type
+            type: "string", // data-type
             description: "Package name", // desc
             example: "Package name", // example
           },
           description: {
-            type: "String", // data-type
+            type: "string", // data-type
             description: "Package description", // desc
             example: "Package description", // example
           },
           price: {
-            type: "Number", // data-type
+            type: "number", // data-type
             description: "Package price", // desc
-            example: "10000", // example
+            example: 10000, // example
           },
           quantity: {
-            type: "Number", // data-type
+            type: "number", // data-type
             description: "Quantity of package available", // desc
-            example: "30", // example
+            example: 30, // example
           },
           pickup_location: {
-            type: "String",
+            type: "string",
             description: "_id of the location of the package", // desc
             example: "6290b8a117bbcaf8b4df5788", // example
           },
         },
       },
       Order: {
-        type: "Object", // data type
+        type: "object", // data type
         properties: {
           _id: {
-            type: "String", // data-type
+            type: "string", // data-type
             description: "Database auto generated order id", // desc
             example: "6290b8a117bbcaf8b4df5788", // example
           },
           order_id: {
-            type: "String", // data-type
+            type: "string", // data-type
             description: "Random unique order id", // desc
             example: "OO-27253", // example
           },
           description: {
-            type: "String", // data-type
+            type: "string", // data-type
             description: "Order description", // desc
             example: "Order description", // example
           },
           distance: {
-            type: "Number", // data-type
+            type: "string", // data-type
             description:
               "Distance from rider location to user delivery location", // desc
             example: "2km", // example
           },
           price: {
-            type: "Number", // data-type
+            type: "number", // data-type
             description: "Order price", // desc
-            example: "15000", // example
+            example: 15000, // example
           },
           eta_pickup: {
-            type: "Number", // data-type
+            type: "string", // data-type
             description: "Time to pickup order", // desc
             example: "30m", // example
           },
           eta_delivery: {
-            type: "Number", // data-type
+            type: "string", // data-type
             description: "Time to deliver order", // desc
             example: "40m", // example
           },
           picked_up: {
-            type: "Boolean", // data-type
+            type: "boolean", // data-type
             description: "The picked up status of the order", // desc
-            example: "true", // example
+            example: true, // example
           },
           delivered: {
-            type: "Boolean", // data-type
+            type: "boolean", // data-type
             description: "The delivered status of the order", // desc
-            example: "false", // example
+            example: false, // example
           },
           user_id: {
-            type: "String", // data-type
+            type: "string", // data-type
             description: "The _id of user that made the order", // desc
             example: "6290b8a117bbcaf8b4df5788", // example
           },
           rider_id: {
-            type: "String", // data-type
+            type: "string", // data-type
             description: "The _id of rider that is making the delivery", // desc
             example: "6290b8a117bbcaf8b4df5788", // example
           },
           packages: {
-            type: "[String]", // data-type
+            type: "[string]", // data-type
             description: "An array of _id of the packages ordered by the user", // desc
             example: "[6290b8a117bbcaf8b4df5788, 6290c277e3bbd3c0de26c41e]", // example
           },
           order_status: {
-            type: "String",
+            type: "string",
             description: "The status of the order", // desc
             enum: ["completed", "pending", "canceled"],
             example: "pending", // example
           },
           paid: {
-            type: "Boolean",
+            type: "boolean",
             description: "The paid status of the order",
-            example: "false",
+            example: false,
           },
           pickup_locations: {
-            type: "[String]",
+            type: "[string]",
             description:
               "An array of _id of the locations of the packages ordered by the user", // desc
             example: "[6290b8a117bbcaf8b4df5788, 6290c277e3bbd3c0de26c41e]", // example
           },
           delivery_location: {
-            type: "String",
+            type: "string",
             description: "The _id of the delivery location", // desc
             example: "6290b8a117bbcaf8b4df5788", // example
           },
         },
       },
       NotificationUser: {
-        type: "Object",
+        type: "object",
         properties: {
           user_id: {
-            type: "String", // data-type
+            type: "string", // data-type
             description: "The _id of user that will receive the notification", // desc
             example: "6290b8a117bbcaf8b4df5788", // example
           },
           title: {
-            type: "String",
+            type: "string",
             description: "The title of the notification",
             example: "Notification title",
           },
           content: {
-            type: "String",
+            type: "string",
             description: "The content of the notification",
             example: "Notification content",
           },
           notification_type: {
-            type: "String",
+            type: "string",
             description: "The type of the notification",
             example: "order",
           },
           order_id: {
-            type: "String",
+            type: "string",
             description:
               "The order id of the notification for order type notifications",
             example: "6290b8a117bbcaf8b4df5788",
@@ -294,30 +294,30 @@ export default {
         },
       },
       NotificationRider: {
-        type: "Object",
+        type: "object",
         properties: {
           rider_id: {
-            type: "String", // data-type
+            type: "string", // data-type
             description: "The _id of rider that will receive the notification", // desc
             example: "6290b8a117bbcaf8b4df5788", // example
           },
           title: {
-            type: "String",
+            type: "string",
             description: "The title of the notification",
             example: "Notification title",
           },
           content: {
-            type: "String",
+            type: "string",
             description: "The content of the notification",
             example: "Notification content",
           },
           notification_type: {
-            type: "String",
+            type: "string",
             description: "The type of the notification",
             example: "order",
           },
           order_id: {
-            type: "String",
+            type: "string",
             description:
               "The order id of the notification for order type notifications",
             example: "6290b8a117bbcaf8b4df5788",

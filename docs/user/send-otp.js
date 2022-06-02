@@ -3,17 +3,21 @@ export default {
     tags: ["User operations"], // operation's tag.
     description: "Send an OTP", // operation's desc.
     operationId: "sendOtpUser", // unique operation id
+    consumes: ["text/plain"],
     parameters: [
       // expected params.
       {
         name: "phone_number", // name of the param
         in: "body", // location of the param
-        schema: {
-          type: "Number",
-          example: "2348139306230",
+        "application/json": {
+          schema: {
+            type: "number",
+            example: 2348139306230,
+          },
         },
         required: true, // Mandatory param
-        description: "Phone number to send OTP", // param desc.
+        description:
+          "Phone number to send OTP. Type Number. Example 2348139306230", // param desc.
       },
     ],
     // expected responses
@@ -26,11 +30,11 @@ export default {
           "application/json": {
             schema: {
               Status: {
-                type: "String",
+                type: "string",
                 example: "success",
               },
               Details: {
-                type: "String",
+                type: "string",
                 description:
                   "An encoded JSON String containing the timestamp, phone number and otp id. " +
                   "To be passed as a body parameter when verifying OTP",

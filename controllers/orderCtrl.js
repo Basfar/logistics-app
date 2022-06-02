@@ -1,6 +1,7 @@
 import Order from "../models/Order.js";
 import got from "got";
 import sgMail from "@sendgrid/mail";
+import nodemailer from "nodemailer";
 import otpGenerator from "otp-generator";
 import Package from "../models/Package.js";
 import NotificationUser from "../models/NotificationUser.js";
@@ -10,7 +11,7 @@ import LocationCol from "../models/Location.js";
 import Rider from "../models/Rider.js";
 import Company from "../models/Company.js";
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+// sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const genOrderId = () => {
   return (
@@ -58,43 +59,105 @@ const createNotification = async (
   return [userNot, riderNot];
 };
 
-const sendRiderEmail = (email, subject, text) => {
-  const msgR = {
-    to: email,
-    from: "nologe37@gmail.com", // Use the email address or domain you verified above
-    subject: subject,
-    text: text,
-  };
-  sgMail.send(msgR).then(
-    () => {},
-    (error) => {
-      console.error(error);
+// const transporter = nodemailer.createTransport({
+//   host: "smtp.gmail.com",
+//   port: 465,
+//   secure: true,
+//   auth: {
+//     user: `${process.env.EMAIL_ADDRESS}`,
+//     pass: `${process.env.EMAIL_PASSWORD}`,
+//   },
+// });
 
-      if (error.response) {
-        console.error(error.response.body);
-      }
-    }
-  );
+// await transporter.verify();
+
+const sendRiderEmail = async (email, subject, text) => {
+  // const msgR = {
+  //   to: email,
+  //   from: "nologe37@gmail.com", // Use the email address or domain you verified above
+  //   subject: subject,
+  //   text: text,
+  // };
+  // sgMail.send(msgR).then(
+  //   () => {},
+  //   (error) => {
+  //     console.error(error);
+
+  //     if (error.response) {
+  //       console.error(error.response.body);
+  //     }
+  //   }
+  // );
+
+  // console.log("After transporter creation");
+  // console.log("After transporter verification");
+
+  // const mailOptions = {
+  //   from: `"Percy Jackson"<${process.env.EMAIL_ADDRESS}>`,
+  //   to: `${email}`,
+  //   subject: subject,
+  //   text: text,
+  // };
+
+  // console.log("After mail options");
+
+  // transporter.sendMail(mailOptions, (err, response) => {
+  //   if (err) {
+  //     console.log("Here in transporter");
+  //     console.log(err);
+  //     // statusCode = 400;
+  //     // resp = { Status: "Failure", Details: err };
+  //   } else {
+  //     console.log("Success");
+  //     // statusCode = 200;
+  //     // resp = { Status: "Success", Details: encoded };
+  //   }
+  // });
 };
 
-const sendUserEmail = (email, subject, text) => {
-  const msgU = {
-    to: email,
-    from: "nologe37@gmail.com", // Use the email address or domain you verified above
-    subject: subject,
-    text: text,
-  };
-  //ES6
-  sgMail.send(msgU).then(
-    () => {},
-    (error) => {
-      console.error(error);
+const sendUserEmail = async (email, subject, text) => {
+  // const msgU = {
+  //   to: email,
+  //   from: "nologe37@gmail.com", // Use the email address or domain you verified above
+  //   subject: subject,
+  //   text: text,
+  // };
+  // //ES6
+  // sgMail.send(msgU).then(
+  //   () => {},
+  //   (error) => {
+  //     console.error(error);
 
-      if (error.response) {
-        console.error(error.response.body);
-      }
-    }
-  );
+  //     if (error.response) {
+  //       console.error(error.response.body);
+  //     }
+  //   }
+  // );
+  
+  // console.log("After transporter creation");
+  // console.log("After transporter verification");
+
+  // const mailOptions = {
+  //   from: `"Percy Jackson"<${process.env.EMAIL_ADDRESS}>`,
+  //   to: `${email}`,
+  //   subject: subject,
+  //   text: text,
+  // };
+
+  // console.log("After mail options");
+
+  // transporter.sendMail(mailOptions, (err, response) => {
+  //   if (err) {
+  //     console.log("Here in transporter");
+  //     console.log(err);
+  //     // statusCode = 400;
+  //     // resp = { Status: "Failure", Details: err };
+  //   } else {
+  //     console.log("Success");
+  //     // statusCode = 200;
+  //     // resp = { Status: "Success", Details: encoded };
+  //   }
+  // });
 };
 
 const orderCtrl = {
@@ -168,16 +231,16 @@ const orderCtrl = {
         "order",
         rider_id
       );
-      sendUserEmail(
-        user.email,
-        "Order Creation",
-        `You have created a new order with order id ${order_id}`
-      );
-      sendRiderEmail(
-        rider.email,
-        "Order Creation",
-        `You have received a new order with order id ${order_id}`
-      );
+      // sendUserEmail(
+      //   user.email,
+      //   "Order Creation",
+      //   `You have created a new order with order id ${order_id}`
+      // );
+      // sendRiderEmail(
+      //   rider.email,
+      //   "Order Creation",
+      //   `You have received a new order with order id ${order_id}`
+      // );
       return res.status(201).json({ ...newOrder._doc, status: "successful" });
     } catch (err) {
       console.log(err);
@@ -244,16 +307,16 @@ const orderCtrl = {
         "order",
         rider_id
       );
-      sendUserEmail(
-        user.email,
-        "Order Accepted",
-        `Your order ${order_id} has been accepted`
-      );
-      sendRiderEmail(
-        rider.email,
-        "Order Accepted",
-        `You have accepted a new order with order id ${order_id}`
-      );
+      // sendUserEmail(
+      //   user.email,
+      //   "Order Accepted",
+      //   `Your order ${order_id} has been accepted`
+      // );
+      // sendRiderEmail(
+      //   rider.email,
+      //   "Order Accepted",
+      //   `You have accepted a new order with order id ${order_id}`
+      // );
       return res.status(200).json({ message: "order accepted" });
     } catch (err) {
       console.log(err);
@@ -282,16 +345,16 @@ const orderCtrl = {
         rider_id
       );
 
-      sendUserEmail(
-        user.email,
-        "Order Declined",
-        `Your order ${order_id} has been declined. Please choose another rider`
-      );
-      sendRiderEmail(
-        rider.email,
-        "Order Declined",
-        `You have declined order with order id ${order_id}`
-      );
+      // sendUserEmail(
+      //   user.email,
+      //   "Order Declined",
+      //   `Your order ${order_id} has been declined. Please choose another rider`
+      // );
+      // sendRiderEmail(
+      //   rider.email,
+      //   "Order Declined",
+      //   `You have declined order with order id ${order_id}`
+      // );
       return res.status(200).json({ message: "order declined" });
     } catch (err) {
       console.log(err);
@@ -316,16 +379,16 @@ const orderCtrl = {
       );
       const user = await User.findById(user_id);
       const rider = await Rider.findById(rider_id);
-      sendUserEmail(
-        user.email,
-        "Rider Changed",
-        `Your rider for order ${order_id} has been changed.`
-      );
-      sendRiderEmail(
-        rider.email,
-        "Rider Changed",
-        `You have received a new order with order id ${order_id}`
-      );
+      // sendUserEmail(
+      //   user.email,
+      //   "Rider Changed",
+      //   `Your rider for order ${order_id} has been changed.`
+      // );
+      // sendRiderEmail(
+      //   rider.email,
+      //   "Rider Changed",
+      //   `You have received a new order with order id ${order_id}`
+      // );
       res.status(200).json({ message: "rider changed successfully" });
     } catch (err) {
       console.log(err);
@@ -351,16 +414,16 @@ const orderCtrl = {
       );
       const user = await User.findById(user_id);
       const rider = await Rider.findById(rider_id);
-      sendUserEmail(
-        user.email,
-        "Order Picked Up",
-        `Your order ${order_id} has been picked up.`
-      );
-      sendRiderEmail(
-        rider.email,
-        "Order Picked Up",
-        `You have picked up order with order id ${order_id}`
-      );
+      // sendUserEmail(
+      //   user.email,
+      //   "Order Picked Up",
+      //   `Your order ${order_id} has been picked up.`
+      // );
+      // sendRiderEmail(
+      //   rider.email,
+      //   "Order Picked Up",
+      //   `You have picked up order with order id ${order_id}`
+      // );
       return res.status(200).json({ message: "order picked up" });
     } catch (err) {
       console.log(err);
@@ -386,16 +449,16 @@ const orderCtrl = {
       );
       const user = await User.findById(user_id);
       const rider = await Rider.findById(rider_id);
-      sendUserEmail(
-        user.email,
-        "Order Delivered",
-        `Your order ${order_id} has been delivered.`
-      );
-      sendRiderEmail(
-        rider.email,
-        "Order Delivered",
-        `You have delivered order with order id ${order_id}`
-      );
+      // sendUserEmail(
+      //   user.email,
+      //   "Order Delivered",
+      //   `Your order ${order_id} has been delivered.`
+      // );
+      // sendRiderEmail(
+      //   rider.email,
+      //   "Order Delivered",
+      //   `You have delivered order with order id ${order_id}`
+      // );
       return res.status(200).json({ message: "order delivered" });
     } catch (err) {
       console.log(err);
