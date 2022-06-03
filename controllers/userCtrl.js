@@ -65,19 +65,19 @@ const userCtrl = {
 
       await foundUser.save();
 
-      const response = await fetch(
-        `${process.env.SERVER_HOST}/api/v1/users/otp/email`,
-        {
-          method: "POST",
-          body: JSON.stringify({ email }),
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      const result = await response.json();
+      // const response = await fetch(
+      //   `${process.env.SERVER_HOST}/api/v1/users/otp/email`,
+      //   {
+      //     method: "POST",
+      //     body: JSON.stringify({ email }),
+      //     headers: { "Content-Type": "application/json" },
+      //   }
+      // );
+      // const result = await response.json();
 
       res.status(200).json({
         message: "Personal Info added successfully",
-        ...result,
+        // ...result,
       });
     } catch (err) {
       console.log(err);
