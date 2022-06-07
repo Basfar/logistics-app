@@ -82,25 +82,20 @@ const sendRiderEmail = async (email, subject, text) => {
   //   () => {},
   //   (error) => {
   //     console.error(error);
-
   //     if (error.response) {
   //       console.error(error.response.body);
   //     }
   //   }
   // );
-
   // console.log("After transporter creation");
   // console.log("After transporter verification");
-
   // const mailOptions = {
   //   from: `"Percy Jackson"<${process.env.EMAIL_ADDRESS}>`,
   //   to: `${email}`,
   //   subject: subject,
   //   text: text,
   // };
-
   // console.log("After mail options");
-
   // transporter.sendMail(mailOptions, (err, response) => {
   //   if (err) {
   //     console.log("Here in transporter");
@@ -127,25 +122,20 @@ const sendUserEmail = async (email, subject, text) => {
   //   () => {},
   //   (error) => {
   //     console.error(error);
-
   //     if (error.response) {
   //       console.error(error.response.body);
   //     }
   //   }
   // );
-  
   // console.log("After transporter creation");
   // console.log("After transporter verification");
-
   // const mailOptions = {
   //   from: `"Percy Jackson"<${process.env.EMAIL_ADDRESS}>`,
   //   to: `${email}`,
   //   subject: subject,
   //   text: text,
   // };
-
   // console.log("After mail options");
-
   // transporter.sendMail(mailOptions, (err, response) => {
   //   if (err) {
   //     console.log("Here in transporter");
@@ -177,28 +167,27 @@ const orderCtrl = {
       const order_id = genOrderId();
       const pickup_locations = [];
       for (let element of packages) {
-        const package_ordered = await Package.findOne({
-          package_id: element.package_id, // smpg8t94u2
+        const pickup_loc = await LocationCol.create({
+          location_id: element.pickup_location.location_id,
+          name: element.pickup_location.name,
+          longitude: element.pickup_location.longitude,
+          latitude: element.pickup_location.latitude,
+          type: "pickup",
         });
-        const oldQty = package_ordered.quantity;
-        if (oldQty <= 0) {
-          return res.status(500).json({ message: "Package not available" });
-        }
-        package_ordered.quantity = oldQty - element.quantity;
-        await package_ordered.save();
-        console.log(package_ordered.pickup_location);
+        const package_ordered = await Package.create({
+          package_id: element.package_id, // smpg8t94u2
+          description: element.description,
+          package_name: element.package_name,
+          quantity: element.quantity,
+          pickup_location: pickup_loc._id,
+        });
         pickup_locations.push(package_ordered.pickup_location);
-        console.log(pickup_locations);
       }
       const user = await User.findById(user_id);
-      if (!user.current_location && !delivery_location) {
+      if (!delivery_location) {
         return res
-          .status(500)
+          .status(400)
           .json({ message: "No delivery location specified" });
-      } else if (!user.current_location && delivery_location) {
-        user.current_location = delivery_location;
-      } else if (user.current_location && !delivery_location) {
-        delivery_location = user.current_location;
       }
       const package_ids = packages.map((elem) => elem.package_id);
       console.log(pickup_locations);
@@ -215,7 +204,7 @@ const orderCtrl = {
       });
 
       const rider = await Rider.findById(rider_id);
-      const admin = await Company.findOne();
+      const admin = await Company.findOne({ company_id: rider_id.company_id });
 
       rider.orders.push(newOrder._id);
       await rider.save();
@@ -430,10 +419,46 @@ const orderCtrl = {
       return res.status(500).json(err);
     }
   },
+  canceledOrder: async (req, res) => {
+    try {
+      const { order_id } = req.body;
+      const foundOrder = await Order.findOne({ order_id });
+      foundOrder.order_status = "canceled";
+      const rider_id = foundOrder.rider_id;
+      const user_id = foundOrder.user_id;
+      await foundOrder.save();
+      await createNotification(
+        user_id,
+        order_id,
+        "Order Canceled",
+        `Your order ${order_id} has been canceled.`,
+        `The user has canceled order with order id ${order_id}`,
+        "order",
+        rider_id
+      );
+      const user = await User.findById(user_id);
+      const rider = await Rider.findById(rider_id);
+      // sendUserEmail(
+      //   user.email,
+      //   "Order Canceled",
+      //   `Your order ${order_id} has been canceled.`
+      // );
+      // sendRiderEmail(
+      //   rider.email,
+      //   "Order Canceled",
+      //   `The user has canceled order with order id ${order_id}`
+      // );
+      return res.status(200).json({ message: "order canceled" });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json(err);
+    }
+  },
   deliveredOrder: async (req, res) => {
     try {
       const { order_id } = req.body;
       const foundOrder = await Order.findOne({ order_id });
+      foundOrder.order_status = "completed";
       foundOrder.delivered = true;
       const rider_id = foundOrder.rider_id;
       const user_id = foundOrder.user_id;
@@ -460,44 +485,6 @@ const orderCtrl = {
       //   `You have delivered order with order id ${order_id}`
       // );
       return res.status(200).json({ message: "order delivered" });
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json(err);
-    }
-  },
-  incPackageQty: async (req, res) => {
-    try {
-      const { quantity, package_id } = req.body; // quantity to increase by
-      const foundPackage = await Package.findOneAndUpdate(
-        { package_id: package_id },
-        { $inc: { quantity: quantity } },
-        { new: true }
-      );
-      return res
-        .status(200)
-        .json({ quantity: foundPackage.quantity, message: "successful" });
-    } catch (err) {
-      console.log(err);
-      res.status(500).json(err);
-    }
-  },
-  addPackage: async (req, res) => {
-    try {
-      const { package_name, description, price, pickup_location, quantity } =
-        req.body;
-      const loc = await LocationCol.create({
-        ...pickup_location,
-      });
-      const package_id = genPackageId();
-      const newPackage = await Package.create({
-        package_id,
-        package_name,
-        description,
-        price,
-        quantity,
-        pickup_location: loc._id,
-      });
-      return res.status(201).json({ ...newPackage._doc, status: "successful" });
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);

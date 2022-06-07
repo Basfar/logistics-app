@@ -20,6 +20,7 @@ const riderSchema = mongoose.Schema(
       required: true,
       ref: "phonenumber",
     },
+    company_id: { type: String, ref: "company" },
     password: { type: String },
     otp_verified: { type: Boolean, default: false, allowNull: true },
     email_verified: { type: Boolean, default: false, allowNull: true },
