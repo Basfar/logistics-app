@@ -26,7 +26,7 @@ adminRouter.route("/api/v1/admin/add_company").post(async (req, res) => {
 
 adminRouter
   .route("/api/v1/admin/get_riders")
-  .get(authAdminToken, riderCtrl.getRiders);
+  .get(authAdminToken, riderCtrl.getRidersCompany);
 adminRouter
   .route("/api/v1/admin/add_rider")
   .post(authAdminToken, riderCtrl.addRider);

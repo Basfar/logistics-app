@@ -5,27 +5,17 @@ export default {
     operationId: "addBikeDetails", // unique operation id
     parameters: [
       // expected params.
-      {
-        name: "vehicle_type", // name of the param
-        in: "body", // location of the param
-        schema: {
-          type: "String",
-          example: "bike",
-        },
-        required: true, // Mandatory param
-        description: "Vehicle type provided", // param desc.
-      },
-      {
-        name: "plate_number", // name of the param
-        in: "body", // location of the param
-        schema: {
-          type: "String",
-          example: "aaa-en39ej",
-        },
-        required: true, // Mandatory param
-        description: "Plate number provided", // param desc.
-      },
     ],
+    requestBody: {
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/BikeDetails",
+          },
+        },
+        // param desc.
+      },
+    },
     // expected responses
     responses: {
       // response code
@@ -35,10 +25,7 @@ export default {
           // content-type
           "application/json": {
             schema: {
-              message: {
-                type: "String",
-                example: "Bike details added successfully",
-              },
+              $ref: "#/components/schemas/Success",
             },
           },
         },

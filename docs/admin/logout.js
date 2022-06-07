@@ -13,10 +13,7 @@ export default {
           // content-type
           "application/json": {
             schema: {
-              message: {
-                type: "String",
-                content: "Successfully logged out",
-              },
+              $ref: "#/components/schemas/LogoutResponse",
             },
           },
         },

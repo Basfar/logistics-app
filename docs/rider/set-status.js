@@ -5,17 +5,17 @@ export default {
     operationId: "setStatus", // unique operation id
     parameters: [
       // expected params.
-      {
-        name: "status", // name of the param
-        in: "body", // location of the param
-        schema: {
-          type: "Boolean",
-          example: "true",
-        },
-        required: true, // Mandatory param
-        description: "Set status of the rider", // param desc.
-      },
     ],
+    requestBody: {
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/SetStatus",
+          },
+        },
+        // param desc.
+      },
+    },
     // expected responses
     responses: {
       // response code
@@ -25,10 +25,7 @@ export default {
           // content-type
           "application/json": {
             schema: {
-              message: {
-                type: "String",
-                example: "Status set successfully to active",
-              },
+              $ref: "#/components/schemas/Success",
             },
           },
         },

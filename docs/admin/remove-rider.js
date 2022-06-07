@@ -5,16 +5,17 @@ export default {
     operationId: "removeRider", // unique operation id
     parameters: [
       // expected params.
-      {
-        name: "rider_id", // name of the param
-        in: "body", // location of the param
-        schema: {
-          $ref: "#/components/schemas/_id",
-        },
-        required: true, // Mandatory param
-        description: "_id of rider selected by admin to be removed", // param desc.
-      },
     ],
+    requestBody: {
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/RemoveRider",
+          },
+        },
+        // param desc.
+      },
+    },
     // expected responses
     responses: {
       // response code
@@ -24,10 +25,7 @@ export default {
           // content-type
           "application/json": {
             schema: {
-              message: {
-                type: "String",
-                example: "Rider removed successfully",
-              },
+              $ref: "#/components/schemas/Success",
             },
           },
         },

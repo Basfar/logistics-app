@@ -5,37 +5,17 @@ export default {
     operationId: "addPersonalInfo", // unique operation id
     parameters: [
       // expected params.
-      {
-        name: "first_name", // name of the param
-        in: "body", // location of the param
-        schema: {
-          type: "String",
-          example: "Oghenero",
-        },
-        required: true, // Mandatory param
-        description: "First name provided", // param desc.
-      },
-      {
-        name: "last_name", // name of the param
-        in: "body", // location of the param
-        schema: {
-          type: "String",
-          example: "Ologe",
-        },
-        required: true, // Mandatory param
-        description: "Last name provided", // param desc.
-      },
-      {
-        name: "email", // name of the param
-        in: "body", // location of the param
-        schema: {
-          type: "String",
-          example: "example@gmail.com",
-        },
-        required: true, // Mandatory param
-        description: "Email provided", // param desc.
-      },
     ],
+    requestBody: {
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/PersonalInfo",
+          },
+        },
+        // param desc.
+      },
+    },
     // expected responses
     responses: {
       // response code
@@ -45,20 +25,7 @@ export default {
           // content-type
           "application/json": {
             schema: {
-              message: {
-                type: "String",
-                example: "Personal info added successfully",
-              },
-              Status: {
-                type: "String",
-                example: "success",
-              },
-              Details: {
-                type: "String",
-                description:
-                  "An encoded JSON String containing the timestamp, phone number and otp id. " +
-                  "To be passed as a body parameter when verifying OTP",
-              },
+              $ref: "#/components/schemas/Success",
             },
           },
         },

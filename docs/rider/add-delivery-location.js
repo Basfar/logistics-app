@@ -5,47 +5,17 @@ export default {
     operationId: "addPDeliveryLocation", // unique operation id
     parameters: [
       // expected params.
-      {
-        name: "location_id", // name of the param
-        in: "body", // location of the param
-        schema: {
-          type: "String",
-          example: "home",
-        },
-        required: true, // Mandatory param
-        description: "Location id created by rider", // param desc.
-      },
-      {
-        name: "location_name", // name of the param
-        in: "body", // location of the param
-        schema: {
-          type: "String",
-          example: "Home",
-        },
-        required: true, // Mandatory param
-        description: "Location name created by rider", // param desc.
-      },
-      {
-        name: "longitude", // name of the param
-        in: "body", // location of the param
-        schema: {
-          type: "Double",
-          example: "3.209383",
-        },
-        required: true, // Mandatory param
-        description: "Location longitude", // param desc.
-      },
-      {
-        name: "latitude", // name of the param
-        in: "body", // location of the param
-        schema: {
-          type: "Double",
-          example: "6.104283",
-        },
-        required: true, // Mandatory param
-        description: "Location latitude", // param desc.
-      },
     ],
+    requestBody: {
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/LocationInput",
+          },
+        },
+        // param desc.
+      },
+    },
     // expected responses
     responses: {
       // response code
@@ -55,10 +25,7 @@ export default {
           // content-type
           "application/json": {
             schema: {
-              message: {
-                type: "String",
-                example: "Delivery Location added successfully",
-              },
+              $ref: "#/components/schemas/Success",
             },
           },
         },

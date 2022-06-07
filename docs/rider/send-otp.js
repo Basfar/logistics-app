@@ -5,36 +5,30 @@ export default {
     operationId: "sendOtpRider", // unique operation id
     parameters: [
       // expected params.
-      {
-        name: "phone_number", // name of the param
-        in: "body", // location of the param
-        schema: {
-          type: "Number",
-          example: "2348139306230"
-        },
-        required: true, // Mandatory param
-        description: "Phone number to send OTP", // param desc.
-      },
     ],
+    requestBody: {
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/SendOTP",
+          },
+        },
+        // param desc.
+      },
+    },
     // expected responses
     responses: {
       // response code
       200: {
-        description: "OTP sent successfully", // response desc.
+        description:
+          "OTP sent successfully. " +
+          "Details contains an encoded JSON String containing the timestamp, " +
+          "phone number and otp id. This is to be passed as a body parameter when verifying OTP", // response desc.
         content: {
           // content-type
           "application/json": {
             schema: {
-              Status: {
-                type: "String",
-                example: "success",
-              },
-              Details: {
-                type: "String",
-                description:
-                  "An encoded JSON String containing the timestamp, phone number and otp id. " +
-                  "To be passed as a body parameter when verifying OTP",
-              },
+              $ref: "#/components/schemas/SendOTPResponse",
             },
           },
         },
