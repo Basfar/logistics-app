@@ -10,7 +10,7 @@ const adminRouter = express.Router();
 adminRouter.route("/api/v1/admin/login").post(adminLogin);
 adminRouter.route("/api/v1/admin/logout").post(adminLogout);
 
-// adminRouter.route("/api/v1/admin/add_admin").post(async (req, res) => {
+// adminRouter.route("/api/v1/admin/add_company").post(async (req, res) => {
 //   await Company.create({
 //     company_id: "ocius lite",
 //     name: "Ocius Lite",

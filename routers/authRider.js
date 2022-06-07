@@ -5,7 +5,7 @@ import PhoneNumber from "../models/PhoneNumber.js";
 const authRiderToken = async (req, res, next) => {
   let authHeader;
   if (req.headers.cookie) {
-    for (let ck of req.headers.cookie.split(";")) {
+    for (let ck of req.headers.cookie.split("; ")) {
       if (ck.split("=")[0] === "riderToken") {
         authHeader = ck.split("=")[1];
       }

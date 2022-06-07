@@ -41,7 +41,7 @@ const adminLogout = async (req, res) => {
 const authAdminToken = async (req, res, next) => {
   let authHeader;
   if (req.headers.cookie) {
-    for (let ck of req.headers.cookie.split(";")) {
+    for (let ck of req.headers.cookie.split("; ")) {
       if (ck.split("=")[0] === "adminToken") {
         authHeader = ck.split("=")[1];
       }
