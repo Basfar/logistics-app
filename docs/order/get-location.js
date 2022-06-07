@@ -6,8 +6,8 @@ export default {
     parameters: [
       // expected params.
       {
-        name: "_id", // name of the param
-        in: "body", // location of the param
+        name: "location_id", // name of the param
+        in: "query", // location of the param
         schema: {
           $ref: "#/components/schemas/_id", // user data model
           example: "6290b8a117bbcaf8b4df5788",

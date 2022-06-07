@@ -128,14 +128,16 @@ const userCtrl = {
         process.env.JWT_SECRET,
         { expiresIn: "3d" }
       );
-      res.cookie("userToken", accessToken, {
-        maxAge: 3 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
-      });
       // const { password, ...others } = user._doc;
       if (psw !== req.body.password)
         res.status(401).json({ message: "Wrong password" });
-      else res.status(200).json({ accessToken });
+      else {
+        res.cookie("userToken", accessToken, {
+          maxAge: 3 * 24 * 60 * 60 * 1000,
+          httpOnly: true,
+        });
+        return res.status(200).json({ accessToken });
+      }
     } catch (e) {
       console.log(e);
       res.status(500).json(e);

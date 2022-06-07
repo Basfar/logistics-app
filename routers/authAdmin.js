@@ -11,6 +11,7 @@ const adminLogin = async (req, res) => {
       admin.password,
       process.env.SECRET_PASSPHRASE
     );
+    console.log(hashedPassword);
     const psw = hashedPassword.toString(CryptoJS.enc.Utf8);
     const accessToken = jwt.sign(
       {
@@ -20,13 +21,15 @@ const adminLogin = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "3d" }
     );
-    res.cookie("adminToken", accessToken, {
-      maxAge: 3 * 24 * 60 * 60 * 1000,
-      httpOnly: true,
-    });
     // const { password, ...others } = user._doc;
     if (psw !== password) res.status(401).json("Wrong password");
-    else return res.status(200).json({ accessToken });
+    else {
+      res.cookie("adminToken", accessToken, {
+        maxAge: 3 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      });
+      return res.status(200).json({ accessToken });
+    }
   } catch (err) {
     console.log(err);
     res.status(500).json(err);

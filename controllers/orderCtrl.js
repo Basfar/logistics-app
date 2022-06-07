@@ -175,7 +175,7 @@ const orderCtrl = {
           type: "pickup",
         });
         const package_ordered = await Package.create({
-          package_id: element.package_id, // smpg8t94u2
+          package_id: genPackageId(), // smpg8t94u2
           description: element.description,
           package_name: element.package_name,
           quantity: element.quantity,
@@ -269,7 +269,7 @@ const orderCtrl = {
   },
   getLocation: async (req, res) => {
     try {
-      const loc = await LocationCol.findOne({ _id: req.body.id });
+      const loc = await LocationCol.findOne({ _id: req.query.location_id });
       return res.status(200).json(loc);
     } catch (err) {
       console.log(err);

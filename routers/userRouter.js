@@ -7,9 +7,9 @@ import express from "express";
 const userRouter = express.Router();
 
 userRouter.route("/api/v1/users/otp/phone").post(otpCtrl.otpPhone);
-userRouter.route("/api/v1/users/otp/email").post(otpCtrl.otpEmail);
+// userRouter.route("/api/v1/users/otp/email").post(otpCtrl.otpEmail);
 userRouter.route("/api/v1/users/otp/verify/phone").post(otpCtrl.verifyOtpPhone);
-userRouter.route("/api/v1/users/otp/verify/email").post(otpCtrl.verifyOtpEmail);
+// userRouter.route("/api/v1/users/otp/verify/email").post(otpCtrl.verifyOtpEmail);
 userRouter
   .route("/api/v1/users/set_password")
   .post(authToken, userCtrl.setPassword);

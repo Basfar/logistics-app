@@ -5,17 +5,17 @@ export default {
     operationId: "declineOrder", // unique operation id
     parameters: [
       // expected params.
-      {
-        name: "order_id", // name of the param
-        in: "body", // location of the param
-        schema: {
-          type: "String",
-          example: "OO-27253",
-        },
-        required: true, // Mandatory param
-        description: "Order id", // param desc.
-      },
     ],
+    requestBody: {
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/OrderIn",
+          },
+        },
+        // param desc.
+      },
+    },
     // expected responses
     responses: {
       // response code
@@ -25,10 +25,7 @@ export default {
           // content-type
           "application/json": {
             schema: {
-              message: {
-                type: "String",
-                example: "order declined",
-              },
+              $ref: "#/components/schemas/Success",
             },
           },
         },

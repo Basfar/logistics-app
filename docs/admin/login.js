@@ -5,27 +5,17 @@ export default {
     operationId: "loginAdmin", // unique operation id
     parameters: [
       // expected params.
-      {
-        name: "email", // name of the param
-        in: "body", // location of the param
-        schema: {
-          type: "String",
-          example: "example@gmail.com",
-        },
-        required: true, // Mandatory param
-        description: "Email provided by user", // param desc.
-      },
-      {
-        name: "password", // name of the param
-        in: "body", // location of the param
-        schema: {
-          type: "String",
-          example: "password",
-        },
-        required: true, // Mandatory param
-        description: "Password provided by user", // param desc.
-      },
     ],
+    requestBody: {
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/Login",
+          },
+        },
+        // param desc.
+      },
+    },
     // expected responses
     responses: {
       // response code
@@ -35,11 +25,7 @@ export default {
           // content-type
           "application/json": {
             schema: {
-              accessToken: {
-                type: "String",
-                description:
-                  "A unique access token for user, saved in cookies with expiration time 3d",
-              },
+              $ref: "#/components/schemas/LoginResponse",
             },
           },
         },

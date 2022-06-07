@@ -5,17 +5,17 @@ export default {
     operationId: "setPassword", // unique operation id
     parameters: [
       // expected params.
-      {
-        name: "password", // name of the param
-        in: "body", // location of the param
-        schema: {
-          type: "String",
-          example: "password",
-        },
-        required: true, // Mandatory param
-        description: "Password user provided", // param desc.
-      },
     ],
+    requestBody: {
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/SetPassword",
+          },
+        },
+        // param desc.
+      },
+    },
     // expected responses
     responses: {
       // response code
@@ -25,10 +25,7 @@ export default {
           // content-type
           "application/json": {
             schema: {
-              message: {
-                type: "String",
-                example: "Password set successfully",
-              },
+              $ref: "#/components/schemas/Success",
             },
           },
         },
@@ -40,10 +37,7 @@ export default {
           // content-type
           "application/json": {
             schema: {
-              Message: {
-                type: "String",
-                content: "You have already set the password",
-              },
+              $ref: "#/components/schemas/Error", // error data model
             },
           },
         },

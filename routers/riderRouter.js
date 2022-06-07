@@ -7,13 +7,13 @@ import { authRiderOTPVerified, authRiderToken } from "./authRider.js";
 const riderRouter = express.Router();
 
 riderRouter.route("/api/v1/riders/otp/phone").post(otpCtrl.otpPhone);
-riderRouter.route("/api/v1/riders/otp/email").post(otpCtrl.otpEmail);
+// riderRouter.route("/api/v1/riders/otp/email").post(otpCtrl.otpEmail);
 riderRouter
   .route("/api/v1/riders/otp/verify/phone")
   .post(otpCtrl.verifyOtpPhone);
-riderRouter
-  .route("/api/v1/riders/otp/verify/email")
-  .post(otpCtrl.verifyOtpEmail);
+// riderRouter
+//   .route("/api/v1/riders/otp/verify/email")
+//   .post(otpCtrl.verifyOtpEmail);
 
 riderRouter
   .route("/api/v1/riders/set_password")

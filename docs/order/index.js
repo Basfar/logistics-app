@@ -10,34 +10,34 @@ import pickedUpOrder from "./picked-up-order.js";
 import deliveredOrder from "./delivered-order.js";
 
 export const orderPaths = {
-  "/api/v1/orders/create_order": {
+  "/orders/create_order": {
     ...createOrder,
   },
-  "/api/v1/orders/get_packages": {
+  "/orders/get_packages": {
     ...getPackages,
   },
-  "/api/v1/orders/get_package": {
+  "/orders/get_package": {
     ...getPackage,
   },
-  "/api/v1/orders/get_order": {
+  "/orders/get_order": {
     ...getOrder,
   },
-  "/api/v1/orders/get_location": {
+  "/orders/get_location": {
     ...getLocation,
   },
-  "/api/v1/orders/accept_order": {
+  "/orders/accept_order": {
     ...acceptOrder,
   },
-  "/api/v1/orders/decline_order": {
+  "/orders/decline_order": {
     ...declineOrder,
   },
-  "/api/v1/orders/change_rider": {
+  "/orders/change_rider": {
     ...changeRider,
   },
-  "/api/v1/orders/picked_up_order": {
+  "/orders/picked_up_order": {
     ...pickedUpOrder,
   },
-  "/api/v1/orders/delivered_order": {
+  "/orders/delivered_order": {
     ...deliveredOrder,
   },
 };

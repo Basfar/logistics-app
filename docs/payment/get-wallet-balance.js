@@ -13,11 +13,7 @@ export default {
           // content-type
           "application/json": {
             schema: {
-              balance: {
-                type: "Number",
-                description: "Wallet balance",
-                example: "15000",
-              },
+              $ref: "#/components/schemas/WalletBalance",
             },
           },
         },

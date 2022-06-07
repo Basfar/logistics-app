@@ -231,6 +231,10 @@ const riderCtrl = {
     const riders = await Rider.find({ active: true });
     res.status(200).json(riders);
   },
+  getRidersCompany: async (req, res) => {
+    const riders = await Rider.find({ active: true, company_id: req.user.id });
+    res.status(200).json(riders);
+  },
   addRider: async (req, res) => {
     try {
       const { rider } = req.body; // email, password, phone number
