@@ -12,10 +12,10 @@ const packageSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    price: {
-      type: Number,
-      required: true,
-    },
+    // price: {
+    //   type: Number,
+    //   required: true,
+    // },
     quantity: { type: Number, required: true },
     pickup_location: {
       type: mongoose.Schema.Types.ObjectId,

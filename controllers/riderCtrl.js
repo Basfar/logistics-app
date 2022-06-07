@@ -10,7 +10,7 @@ import PhoneNumber from "../models/PhoneNumber.js";
 const riderCtrl = {
   setPassword: async (req, res) => {
     try {
-      const password = req.body.password;
+      const { password, company_id } = req.body;
       // const foundNumber = await PhoneNumber.findOne({
       //   number: parseInt(phone_number.toString().substring(3)),
       // });
@@ -23,6 +23,7 @@ const riderCtrl = {
           process.env.SECRET_PASSPHRASE
         ).toString();
 
+        foundRider.company_id = company_id;
         await foundRider.save();
 
         return res.status(200).json({ message: "Password set successfully" });
@@ -84,7 +85,9 @@ const riderCtrl = {
 
       await foundRider.save();
 
-      const admin = await Company.findOne();
+      const admin = await Company.findOne({
+        company_id: foundRider.company_id,
+      });
       if (admin.riders.indexOf(foundRider._id) > -1) {
         admin.riders.push(foundRider._id);
       }
@@ -136,7 +139,9 @@ const riderCtrl = {
       });
       foundRider.active = rider_status;
       await foundRider.save();
-      const admin = await Company.findOne();
+      const admin = await Company.findOne({
+        company_id: foundRider.company_id,
+      });
       console.log(admin.riders.indexOf(foundRider._id));
       if (admin.riders.indexOf(foundRider._id) == -1) {
         console.log("Here");
@@ -226,19 +231,44 @@ const riderCtrl = {
     const riders = await Rider.find({ active: true });
     res.status(200).json(riders);
   },
+  addRider: async (req, res) => {
+    try {
+      const { rider } = req.body; // email, password, phone number
+      const { password } = rider;
+      const company_id = req.user.id;
+      const encPassword = CryptoJS.AES.encrypt(
+        password,
+        process.env.SECRET_PASSPHRASE
+      ).toString();
+      const newRider = await Rider.create({
+        ...rider,
+        password: encPassword,
+        company_id,
+      });
+      const { createdAt, updatedAt, ...others } = newRider._doc;
+      res.status(201).json(others);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+    }
+  },
   removeRider: async (req, res) => {
     try {
       const { rider_id } = req.body;
-      const deletedRider = Rider.findOneAndDelete({ _id: rider_id });
-      if (deletedRider) {
+      const company_id = req.user.id;
+      const admin = await Company.findOne({ company_id: company_id });
+      const deletedRider = await Rider.findOne({ _id: rider_id });
+      if (deletedRider && deletedRider.company_id == company_id) {
+        await Rider.deleteOne({ _id: rider_id });
         const indexA = admin.active_riders.indexOf(rider_id);
         const indexR = admin.riders.indexOf(rider_id);
-        const admin = await Company.findOne();
         admin.active_riders.splice(indexA, 1);
         admin.riders.splice(indexR, 1);
         await admin.save();
+        return res.status(200).json({ message: "Rider removed successfully" });
+      } else {
+        return res.status(400).json({ message: "Rider doesn't exist" });
       }
-      return res.status(200).json({ message: "Rider removed successfully" });
     } catch (err) {
       console.log(err);
       res.status(500).json(err);

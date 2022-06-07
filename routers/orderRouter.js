@@ -34,6 +34,10 @@ orderRouter
   .post(authRiderToken, orderCtrl.pickedUp);
 
 orderRouter
+  .route("/api/v1/orders/canceled_order")
+  .post(authRiderToken, orderCtrl.canceledOrder);
+
+orderRouter
   .route("/api/v1/orders/delivered_order")
   .post(authRiderToken, orderCtrl.deliveredOrder);
 
