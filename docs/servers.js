@@ -6,7 +6,7 @@ export default {
     },
     {
       url: "https://warm-reef-40362.herokuapp.com/api/v1", // url
-      description: "Local server", // name
+      description: "Remote server", // name
     },
   ],
 };
