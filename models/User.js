@@ -19,6 +19,7 @@ const userSchema = mongoose.Schema(
       required: true,
       ref: "phonenumber",
     },
+    image_url: { type: String },
     password: { type: String },
     otp_verified: { type: Boolean, default: false, allowNull: true },
     email_verified: { type: Boolean, default: false, allowNull: true },

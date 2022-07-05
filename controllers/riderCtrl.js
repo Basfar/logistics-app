@@ -6,6 +6,10 @@ import Company from "../models/Company.js";
 import NotificationRider from "../models/NotificationRider.js";
 import LocationCol from "../models/Location.js";
 import PhoneNumber from "../models/PhoneNumber.js";
+import cloudinary from "cloudinary";
+import multer from "multer";
+import fs from "fs";
+import { exec } from "child_process";
 
 const riderCtrl = {
   setPassword: async (req, res) => {
@@ -282,6 +286,36 @@ const riderCtrl = {
     const rider_id = req.user.id;
     const riderNots = await NotificationRider.find({ rider_id: rider_id });
     res.status(200).json(riderNots);
+  },
+  imageUpload: async (req, res) => {
+    try {
+      let image;
+      console.log(req.body);
+      console.log(req.file);
+      const filePath = req.file.path;
+      image = await cloudinary.v2.uploader.upload(filePath, {
+        use_filename: true,
+        unique_filename: false,
+      });
+      const foundRider = await Rider.findById(req.user.id);
+      foundRider.image_url = image.url;
+      await foundRider.save();
+      fs.unlinkSync(filePath);
+      console.log(image);
+      res.status(200).json(image);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+    }
+  },
+  getImageUrl: async (req, res) => {
+    try {
+      const foundRider = await Rider.findById(req.user.id);
+      res.status(200).json({ image_url: foundRider.image_url });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+    }
   },
 };
 

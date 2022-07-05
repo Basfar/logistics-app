@@ -7,6 +7,10 @@ import LocationCol from "../models/Location.js";
 import CryptoJS from "crypto-js";
 import jwt from "jsonwebtoken";
 import fetch from "node-fetch";
+import cloudinary from "cloudinary";
+import multer from "multer";
+import fs from "fs";
+import { exec } from "child_process";
 
 const userCtrl = {
   setPassword: async (req, res) => {
@@ -178,6 +182,36 @@ const userCtrl = {
     const user_id = req.user.id;
     const userNots = await NotificationUser.find({ user_id: user_id });
     res.status(200).json(userNots);
+  },
+  imageUpload: async (req, res) => {
+    try {
+      let image;
+      console.log(req.body);
+      console.log(req.file);
+      const filePath = req.file.path;
+      image = await cloudinary.v2.uploader.upload(filePath, {
+        use_filename: true,
+        unique_filename: false,
+      });
+      const foundUser = await User.findById(req.user.id);
+      foundUser.image_url = image.url;
+      await foundUser.save();
+      fs.unlinkSync(filePath);
+      console.log(image);
+      res.status(200).json(image);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+    }
+  },
+  getImageUrl: async (req, res) => {
+    try {
+      const foundUser = await User.findById(req.user.id);
+      res.status(200).json({ image_url: foundUser.image_url });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+    }
   },
 };
 
